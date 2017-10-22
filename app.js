@@ -15,7 +15,7 @@ app.get('/', function(req, res){
     res.send('Please use /api/food');
 });
 
-app.get('/api/food', function(req, res){
+app.get('/api/snacks', function(req, res){
     Food.GetFoods(function(err, food){
         if(err)
         {
@@ -24,7 +24,7 @@ app.get('/api/food', function(req, res){
         res.json(food);
     });
 });
-app.get('/api/food/:id', function(req, res){
+app.get('/api/snacks/:id', function(req, res){
     Food.GetFood(req.params.id, function(err, food){
         if(err)
         {
@@ -33,7 +33,7 @@ app.get('/api/food/:id', function(req, res){
         res.json(food);
     });
 });
-app.post('/api/food', function(req, res){
+app.post('/api/snacks', function(req, res){
     var food = req.body;
     Food.AddFood(food, function(err, food){
         if(err)
@@ -43,7 +43,7 @@ app.post('/api/food', function(req, res){
         res.json(food);
     });
 });
-app.put('/api/food/:id', function(req, res){
+app.put('/api/snacks/:id', function(req, res){
     var id = req.params.id;
     var food = req.body;
     Food.UpdateFood(id, food, {}, function(err, food){
@@ -54,7 +54,7 @@ app.put('/api/food/:id', function(req, res){
         res.json(food);
     });
 });
-app.delete('/api/food/:id', function(req, res){
+app.delete('/api/snacks/:id', function(req, res){
     var id = req.params.id;
     Food.DeleteFood(id,  function(err, food){
         if(err)
