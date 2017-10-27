@@ -5,6 +5,12 @@ var foodSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+    },
+    price: {
+        type: String,
+    },
     //vendors:
     // location_city: {
     //      type: String
@@ -12,6 +18,9 @@ var foodSchema = mongoose.Schema({
     //  location_province:{
     //      type: String
     //  },
+    taste: {
+        type: Array
+    },
     create_date: {
         type: Date,
         default: Date.now
