@@ -5,7 +5,7 @@ var foodSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    privince: {
+    province: {
         type: String,
         required: true
     },
