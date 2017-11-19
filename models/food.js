@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var foodSchema = mongoose.Schema({
     name: {
@@ -35,6 +36,9 @@ var foodSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    rates:[
+        { type : Schema.ObjectId, ref: 'Rate' }
+    ],
     average_rate: {
         type: Number
     },
@@ -69,3 +73,31 @@ module.exports.DeleteFood = function (id, callback) {
     var query = { _id: id }
     Food.remove(query, callback);
 };
+
+//get rates
+module.exports.GetRates = function (id, callback, limit) {
+    Food.findById(id).rates.find(callback).limit(limit);
+    Food.rates.find(callback).limit(limit);
+};
+
+//create rate
+module.exports.AddRate = function (id, rate, callback, limit) {
+    var rateId = Rate.create(rate);
+    Food.update({_id: id},
+    {$push: { rates: rate }}, callback);
+    //Food.findById(id).rates.find(callback).limit(limit);
+    //Food.rates.find(callback).limit(limit);
+};
+
+
+// comment.save(function(err, comment) {
+//     if (err) return res.send(err);
+//     Post.findById(req.params.postId, function(err, post) {
+//       if (err) return res.send(err);
+//       post.commentIds.push(comment);
+//       post.save(function(err) {
+//         if (err) return res.send(err);
+//         res.json({ status : 'done' });
+//       });
+//     });
+//   });

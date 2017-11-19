@@ -13,83 +13,101 @@ var db = mongoose.connection;
 
 app.use(function (req, res, next) {
 
-        // Website you wish to allow to connect
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
 
-        // Request methods you wish to allow
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-        // Request headers you wish to allow
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-        // Set to true if you need the website to include cookies in the requests sent
-        // to the API (e.g. in case you use sessions)
-        res.setHeader('Access-Control-Allow-Credentials', true);
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
 
-        // Pass to next layer of middleware
-        next();
-    });
+    // Pass to next layer of middleware
+    next();
+});
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
     res.send('Please use /api/food');
 });
 
-app.get('/api/snacks', function(req, res){
-    Food.GetFoods(function(err, food){
-        if(err)
-        {
+app.get('/api/snacks', function (req, res) {
+    Food.GetFoods(function (err, food) {
+        if (err) {
             Console.log(err);
         }
         res.json(food);
     });
 });
-app.get('/api/snacks/:id', function(req, res){
-    Food.GetFood(req.params.id, function(err, food){
-        if(err)
-        {
+app.get('/api/snacks/:id', function (req, res) {
+    Food.GetFood(req.params.id, function (err, food) {
+        if (err) {
             Console.log(err);
         }
         res.json(food);
     });
 });
-app.post('/api/snacks', function(req, res){
+app.post('/api/snacks', function (req, res) {
     var food = req.body;
-    Food.AddFood(food, function(err, food){
-        if(err)
-        {
+    Food.AddFood(food, function (err, food) {
+        if (err) {
             Console.log(err);
         }
         res.json(food);
     });
 });
-app.put('/api/snacks/:id', function(req, res){
+app.put('/api/snacks/:id', function (req, res) {
     var id = req.params.id;
     var food = req.body;
-    Food.UpdateFood(id, food, {}, function(err, food){
-        if(err)
-        {
+    Food.UpdateFood(id, food, {}, function (err, food) {
+        if (err) {
             Console.log(err);
         }
         res.json(food);
     });
 });
-app.delete('/api/snacks/:id', function(req, res){
+app.delete('/api/snacks/:id', function (req, res) {
     var id = req.params.id;
-    Food.DeleteFood(id,  function(err, food){
-        if(err)
-        {
+    Food.DeleteFood(id, function (err, food) {
+        if (err) {
             Console.log(err);
         }
         res.json(food);
     });
 });
-app.get('/api/addresses', function(req, res){
-    Address.GetAddress(function(err, address){
-        if(err)
-        {
+app.get('/api/addresses', function (req, res) {
+    Address.GetAddress(function (err, address) {
+        if (err) {
             Console.log(err);
         }
         res.json(address);
+    });
+});
+
+//Rate
+app.get('/api/snacks/:id/rates', function (req, res) {
+    Food.GetFood(req.params.id, function (err, food) {
+        if (err) {
+            Console.log(err);
+        }
+        res.json(food.rates);
+    });
+});
+app.post('/api/snacks/:id/rates', function (req, res) {
+    var rate = req.body;
+    //req.params.id
+    Food.GetFood(req.params.id, function (err, food) {
+        if (err) {
+            Console.log(err);
+        }
+        food.rates.push(rate);
+        food.save(function (err) {
+            if (err) return res.send(err);
+            res.json({ status: 'done' });
+        });
     });
 });
 
