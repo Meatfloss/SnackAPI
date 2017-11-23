@@ -8,15 +8,22 @@ var rateSchema = mongoose.Schema({
     description: {
         type: String
     },
-    userName:{
+    userName: {
         type: String
     }
 });
 
 var Rate = module.exports = mongoose.model('Rate', rateSchema);
 
-module.exports.GetRates = function (callback, limit) {
-    Rate.find(callback).limit(limit);
+module.exports.GetRates = function (ids, callback) {
+    Rate.find(
+        {
+            '_id': {
+                $in: ids
+            }
+        },
+        callback
+    );
 };
 
 module.exports.GetRate = function (id, callback) {

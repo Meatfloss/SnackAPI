@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 
 var Food = require('./models/food.js');
 var Address = require('./models/address.js');
+var Rate = require('./models/rate.js');
 
 app.use(bodyPaser.json());
 //connect to mongoose
@@ -93,7 +94,13 @@ app.get('/api/snacks/:id/rates', function (req, res) {
         if (err) {
             Console.log(err);
         }
-        res.json(food.rates);
+        Rate.GetRates(food.rates, function(err, rates){
+            if(err)
+            {
+                Console.log(err);
+            }
+            res.json(rates);
+        });
     });
 });
 app.post('/api/snacks/:id/rates', function (req, res) {
@@ -103,11 +110,20 @@ app.post('/api/snacks/:id/rates', function (req, res) {
         if (err) {
             Console.log(err);
         }
-        food.rates.push(rate);
-        food.save(function (err) {
-            if (err) return res.send(err);
-            res.json({ status: 'done' });
-        });
+        if (food)
+        {
+            Rate.AddRate(rate, function (err, rate) {
+                if (err) {
+                    Console.log(err);
+                }
+                food.rates.push(rate);
+                food.save(function (err) {
+                    if (err) return res.send(err);
+                    res.json({ status: 'done' });
+                });
+            });
+        }
+
     });
 });
 
