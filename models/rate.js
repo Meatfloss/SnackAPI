@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 var rateSchema = mongoose.Schema({
     value: {
@@ -8,8 +9,13 @@ var rateSchema = mongoose.Schema({
     description: {
         type: String
     },
-    userName: {
+    user_name: {
         type: String
+    },
+    snack_id: {
+        type : Schema.ObjectId,
+        required: true
+        //ref: 'Food'
     }
 });
 
@@ -24,6 +30,19 @@ module.exports.GetRates = function (ids, callback) {
         },
         callback
     );
+};
+
+module.exports.GetSnackRates = function (snackId, callback) {
+    Rate.find(
+        {
+            'snack_id': snackId
+        },
+        callback
+    );
+};
+
+module.exports.GetAllRates = function (callback, limit) {
+    Rate.find(callback).limit(limit);
 };
 
 module.exports.GetRate = function (id, callback) {
@@ -41,6 +60,11 @@ module.exports.UpdateRate = function (id, rate, options, callback) {
 };
 
 module.exports.DeleteRate = function (id, callback) {
+    var query = { _id: id }
+    Rate.remove(query, callback);
+};
+
+module.exports.DeleteSnackRate = function (snackId, callback) {
     var query = { _id: id }
     Rate.remove(query, callback);
 };

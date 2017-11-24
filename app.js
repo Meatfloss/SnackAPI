@@ -76,6 +76,9 @@ app.delete('/api/snacks/:id', function (req, res) {
         if (err) {
             Console.log(err);
         }
+        else {
+
+        }
         res.json(food);
     });
 });
@@ -88,42 +91,40 @@ app.get('/api/addresses', function (req, res) {
     });
 });
 
-//Rate
-app.get('/api/snacks/:id/rates', function (req, res) {
-    Food.GetFood(req.params.id, function (err, food) {
+// get all rates
+app.get('/api/rates', function (req, res) {
+    Rate.GetAllRates(function (err, rates) {
         if (err) {
             Console.log(err);
         }
-        Rate.GetRates(food.rates, function(err, rates){
-            if(err)
-            {
-                Console.log(err);
-            }
-            res.json(rates);
-        });
+        res.json(rates);
     });
 });
-app.post('/api/snacks/:id/rates', function (req, res) {
-    var rate = req.body;
-    //req.params.id
-    Food.GetFood(req.params.id, function (err, food) {
+// get snack's rates
+app.get('/api/snacks/:id/rates', function (req, res) {
+    Rate.GetSnackRates(req.params.id, function (err, rates) {
         if (err) {
             Console.log(err);
         }
-        if (food)
-        {
-            Rate.AddRate(rate, function (err, rate) {
-                if (err) {
-                    Console.log(err);
-                }
-                food.rates.push(rate);
-                food.save(function (err) {
-                    if (err) return res.send(err);
-                    res.json({ status: 'done' });
-                });
-            });
-        }
+        res.json(rates);
+    });
+});
 
+// add rate to snack
+app.post('/api/snacks/:id/rates', function (req, res) {
+    var rate = req.body;
+    var snackId = rate.snack_id;
+    Rate.AddRate(rate, function (err, rate) {
+        if (err) return res.json(err);
+        Rate.GetSnackRates(snackId, function (err, rates) {
+            if (err) return json(err);
+            var sum = rates.reduce((sum, x) => sum + x.value, 0);
+            var averageRate = sum / rates.length;
+            Food.UpdateAverageRate(snackId, averageRate, function (err, value) {
+                if (err) return json.log(err);
+                else return res.json({ status: 'done' });
+            });
+        });
     });
 });
 
