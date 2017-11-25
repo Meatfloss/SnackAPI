@@ -32,13 +32,13 @@ module.exports.GetRates = function (ids, callback) {
     );
 };
 
-module.exports.GetSnackRates = function (snackId, callback) {
+module.exports.GetSnackRates = function (snackId, callback, skipNum = 0, limit = 10) {
     Rate.find(
         {
             'snack_id': snackId
         },
         callback
-    );
+    ).sort({_id: -1}).skip(skipNum).limit(limit);
 };
 
 module.exports.GetAllRates = function (callback, limit) {

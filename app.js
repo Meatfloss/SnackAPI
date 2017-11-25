@@ -101,13 +101,14 @@ app.get('/api/rates', function (req, res) {
     });
 });
 // get snack's rates
-app.get('/api/snacks/:id/rates', function (req, res) {
+app.get('/api/snacks/:id/rates/:index', function (req, res) {
+    var numPerRequest = 10;
     Rate.GetSnackRates(req.params.id, function (err, rates) {
         if (err) {
             Console.log(err);
         }
         res.json(rates);
-    });
+    }, req.params.index * numPerRequest, numPerRequest);
 });
 
 // add rate to snack
