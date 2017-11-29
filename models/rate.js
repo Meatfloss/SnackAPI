@@ -6,6 +6,9 @@ var rateSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    subject: {
+        type: String
+    },
     description: {
         type: String
     },
@@ -19,6 +22,18 @@ var rateSchema = mongoose.Schema({
     }
 });
 
+rateSchema.virtual('createdAt').get(function(){
+    return this._id.getTimestamp();
+});
+
+rateSchema.set('toJSON', {
+    virtuals: true
+ })
+
+//  rateSchema.set('toObject', {
+//     virtuals: true
+//  })
+
 var Rate = module.exports = mongoose.model('Rate', rateSchema);
 
 module.exports.GetRates = function (ids, callback) {
@@ -28,6 +43,8 @@ module.exports.GetRates = function (ids, callback) {
                 $in: ids
             }
         },
+        null,
+        { virtuals: true },
         callback
     );
 };
