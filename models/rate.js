@@ -49,11 +49,11 @@ module.exports.GetRates = function (ids, callback) {
     );
 };
 
-module.exports.GetSnackRates = function (snackId, callback, skipNum = 0, limit = 10) {
+module.exports.GetSnackRates = function (snackId, starValue, callback, skipNum = 0, limit = 10) {
+    var filter = {'snack_id': snackId };
+    if(starValue) filter.value = starValue;
     Rate.find(
-        {
-            'snack_id': snackId
-        },
+        filter,
         callback
     ).sort({_id: -1}).skip(skipNum).limit(limit);
 };

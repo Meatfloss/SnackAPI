@@ -101,9 +101,9 @@ app.get('/api/rates', function (req, res) {
     });
 });
 // get snack's rates
-app.get('/api/snacks/:id/rates/:index', function (req, res) {
+app.get('/api/snacks/:id/rates/:starValue/:index', function (req, res) {
     var numPerRequest = 10;
-    Rate.GetSnackRates(req.params.id, function (err, rates) {
+    Rate.GetSnackRates(req.params.id, Number(req.params.starValue), function (err, rates) {
         if (err) {
             Console.log(err);
         }
@@ -117,7 +117,7 @@ app.post('/api/snacks/:id/rates', function (req, res) {
     var snackId = rate.snack_id;
     Rate.AddRate(rate, function (err, rate) {
         if (err) return res.json(err);
-        Rate.GetSnackRates(snackId, function (err, rates) {
+        Rate.GetSnackRates(snackId, 0, function (err, rates) {
             if (err) return json(err);
             var sum = rates.reduce((sum, x) => sum + x.value, 0);
             var averageRate = sum / rates.length;
