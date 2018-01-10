@@ -82,6 +82,12 @@ app.delete('/api/snacks/:id', function (req, res) {
         res.json(food);
     });
 });
+app.get('/api/snacks/:id/images', function (req, res) {
+    var id = req.params.id;
+    var img = fs.readFileSync('./logo.gif');
+    res.writeHead(200, {'Content-Type': 'image/gif' });
+    res.end(img, 'binary');
+});
 app.get('/api/addresses', function (req, res) {
     Address.GetAddress(function (err, address) {
         if (err) {
